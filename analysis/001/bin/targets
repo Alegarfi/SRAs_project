@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cut -f3 data/bioproject.summary.txt | tail -n+2 |sed "s#^#results/#"| sed "s#\$#.block#"

@@ -1,0 +1,15 @@
+#!/bin/bash
+mkdir -p results/tests
+
+while read palabra
+do
+	echo "Ahora palabra vale "$palabra""
+	echo "$TERMINO_DE_BUSQUEDA	$BIOPROJECT_ID	$SRA_ID	$ID_DE_PUBLICACION" > results/tests/test.$palabra.tsv
+	TERMINO_DE_BUSQUEDA=$palabra
+	BIOPROJECT_ID=$(grep $palabra data/PRJs/*.block |  cut -d "/" -f3 | cut -d ":" -f1) ##Se comentó porque un solo grep \
+	##puede dar múltiples resultados lo cual descuadraría la tabla por lo tanto esto se tiene que resolver posteriormente
+	SAM=$(cut -d "/" results/biosamples_id.txt -f3 | cut -d "=" -f3 | cut -d '"' -f2)
+	SRAID=$(grep -f $SAM data/SRA_Accessions)
+	ID_DE_PUBLICACION=$(grep "id=" data/PRJs/*.block | grep 'Publication date=' | cut -d '=' -f3 | cut -d ' ' -f1 | cut -d '"' -f2)
+	echo "$palabra	$BIOPROJECT_ID	$SRAID	$ID_DE_PUBLICACION" >> results/tests/test.$palabra.tsv
+done < data/search_terms.txt

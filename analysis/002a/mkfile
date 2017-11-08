@@ -1,0 +1,17 @@
+< config.mk
+
+results/%.tsv: results/%.bioprojects_found.txt
+	set -x
+	mkdir -p `dirname $target`
+	echo "Haciendo $target"
+	echo "Procesado a partir de $prereq"
+	INICIO_DE_BLOQUE=$(grep -n "ArchiveID accession="$stem"" $prereq | cut -d ":" -f1)
+	FIN_DE_BLOQUE=$(tail -n+$INICIO_DE_BLOQUE $prereq | grep -m1 -n "</Package>" | cut -d ":" -f1)
+	tail -n+$INICIO_DE_BLOQUE $prereq | head -n$FIN_DE_BLOQUE > $target.build \
+	&& mv $target.build $target
+
+results/%.bioprojects_found.txt:
+	set -x
+	mkdir -p `dirname $target`
+	grep $stem data/blocks/*.block | cut -d "/" -f3 | cut -d "." -f1 > $target.build \
+	&& mv $target.build $target

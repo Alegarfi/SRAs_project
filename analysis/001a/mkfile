@@ -1,0 +1,11 @@
+< config.mk
+
+results/%.block: ~/Documentos/SRAsp/NCBI_SRA_Metadata_20170905/SRA_Accessions
+	set -x
+	mkdir -p `dirname $target`
+	echo "Haciendo $target"
+	echo "Procesado a partir de $prereq"
+	INICIO_DE_BLOQUE=$(grep -n "ArchiveID accession=\"$stem\"" $prereq | cut -d ":" -f1)
+	FIN_DE_BLOQUE=$(tail -n+$INICIO_DE_BLOQUE $prereq | grep -m1 -n "</Package>" | cut -d ":" -f1)
+	tail -n+$INICIO_DE_BLOQUE $prereq | head -n$FIN_DE_BLOQUE > $target.build \
+	&& mv $target.build $target

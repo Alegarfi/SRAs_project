@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cut -f19 data/SRA_Accessions | tail -n+2 |grep "^PRJ" |sed "s#^#results/#"| sed "s#\$#.block#" | sort -u
+
